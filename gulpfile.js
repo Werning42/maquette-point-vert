@@ -1,11 +1,24 @@
-/**
- * Copyright (C) 2019 Proximis
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- */
-(function() {
-	'use strict';
+const gulp = require('gulp');
+const sass = require('gulp-sass');
+const browserSync = require('browser-sync').create();
 
-})();
+function style() {
+
+	return gulp.src('./src/sass/*.scss')
+		.pipe(sass())
+		.pipe(gulp.dest('./css'))
+		.pipe(browserSync.stream());
+}
+
+function watch() {
+	browserSync.init({
+		server: {
+			baseDir: './'
+		}
+	});
+	gulp.watch('./src/sass/*.scss', style);
+	gulp.watch('./*.html').on('change', browserSync.reload);
+}
+
+exports.style = style;
+exports.watch = watch;
